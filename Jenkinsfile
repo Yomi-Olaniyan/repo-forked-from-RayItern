@@ -8,7 +8,7 @@ pipeline{
            stage('Checkout'){
               steps{
 		 echo 'cloning..'
-                 git 'https://github.com/RayItern/JUNECLASSPRO1.git'
+                 git 'https://github.com/Yomi-Olaniyan/repo-forked-from-RayItern.git'
               }
           }
           stage('Compile'){
