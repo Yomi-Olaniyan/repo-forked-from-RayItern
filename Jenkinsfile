@@ -1,7 +1,7 @@
 pipeline{
     tools{
-        jdk 'myjava'
-        maven 'mymaven'
+        jdk 'olaab-java'
+        maven 'olaab-maven'
     }
 	agent any
       stages{
