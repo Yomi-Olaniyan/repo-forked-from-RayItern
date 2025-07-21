@@ -6,7 +6,7 @@ pipeline{
 	agent any
       stages{
            stage('Checkout'){
-	      agent  any	
+	      agent  master	
               steps{
 		 echo 'cloning..'
                  git 'https://github.com/Yomi-Olaniyan/repo-forked-from-RayItern.git'
