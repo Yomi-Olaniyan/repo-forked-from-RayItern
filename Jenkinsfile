@@ -8,8 +8,7 @@ pipeline {
     
     stages {
         stage('Checkout') {
-            agent {
-                label 'master'
+            agent any
             }
             steps {
                 echo 'Cloning...'
