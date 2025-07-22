@@ -1,16 +1,20 @@
 pipeline {
-    agent none
-
-    tools {
+     tools {
         jdk 'olaab-java'
         maven 'olaab-maven'
     }
 
+
+    agent any
+
     stages {
         stage('Checkout') {
-            agent any
+            agent {
+                label 'master'
+            }
             steps {
                 echo 'Cloning...'
+
                 git 'https://github.com/Yomi-Olaniyan/repo-forked-from-RayItern.git'
             }
         }
@@ -19,19 +23,14 @@ pipeline {
             agent { label 'slave-one' }
             steps {
                 echo 'Compiling...'
-                dir('server') {
-                    sh 'mvn compile'
-                }
+                sh 'mvn compile'
             }
         }
-
-        stage('CodeReview') {
+stage('CodeReview') {
             agent { label 'slave-one' }
             steps {
                 echo 'Code Review...'
-                dir('server') {
-                    sh 'mvn pmd:pmd'
-                }
+                sh 'mvn pmd:pmd'
             }
         }
 
@@ -39,10 +38,8 @@ pipeline {
             agent { label 'slave-two' }
             steps {
                 echo 'Testing...'
-                dir('server') {
-                    sh 'mvn test'
+                sh 'mvn test'
                 }
-            }
             post {
                 success {
                     junit 'server/target/surefire-reports/*.xml'
@@ -54,10 +51,8 @@ pipeline {
             agent { label 'master' }
             steps {
                 echo 'Packaging...'
-                dir('server') {
-                    sh 'mvn package'
-                }
+                sh 'mvn package'
             }
         }
     }
-}
+ }
