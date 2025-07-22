@@ -1,10 +1,10 @@
 pipeline {
+    agent none
+
     tools {
         jdk 'olaab-java'
         maven 'olaab-maven'
     }
-
-    agent any
 
     stages {
         stage('Checkout') {
@@ -16,47 +16,47 @@ pipeline {
         }
 
         stage('Compile') {
-            agent {
-                label 'slave-one'
-            }
+            agent { label 'slave-one' }
             steps {
                 echo 'Compiling...'
-                sh 'mvn compile'
+                dir('server') {
+                    sh 'mvn compile'
+                }
             }
         }
 
         stage('CodeReview') {
-            agent {
-                label 'slave-one'
-            }
+            agent { label 'slave-one' }
             steps {
                 echo 'Code Review...'
-                sh 'mvn pmd:pmd'
+                dir('server') {
+                    sh 'mvn pmd:pmd'
+                }
             }
         }
 
         stage('UnitTest') {
-            agent {
-                label 'slave-two'
-            }
+            agent { label 'slave-two' }
             steps {
                 echo 'Testing...'
-                sh 'mvn test'
+                dir('server') {
+                    sh 'mvn test'
+                }
             }
             post {
                 success {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'server/target/surefire-reports/*.xml'
                 }
             }
         }
 
         stage('Package') {
-            agent {
-                label 'master'
-            }
+            agent { label 'master' }
             steps {
                 echo 'Packaging...'
-                sh 'mvn package'
+                dir('server') {
+                    sh 'mvn package'
+                }
             }
         }
     }
